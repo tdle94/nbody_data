@@ -62,6 +62,11 @@ public class NBody {
         // Position all the planets and constitute movement of all planets
         drawPlanets(Double.parseDouble(args[0]), Double.parseDouble(args[1]));
 
+        for (int p = 0; i < p; i++) {
+            System.out.printf("%11.4e %11.4e %11.4e %11.4e %11.4e %12s\n",
+                    px[p], py[p], vx[p], vy[p], m[p], image[p]);
+        }
+
     }
 
     private static void drawPlanets(double t, double dt) {
@@ -70,13 +75,13 @@ public class NBody {
 //        double mex = px[2], mey = py[2];
 //        double sx = px[3], sy = py[3];
 //        double vx = px[4], vy = py[4];
-
+        double deltaT = dt;
 
         // set the scale of the coordinate system
         StdDraw.setXscale(-R, R);
         StdDraw.setYscale(-R, R);
 
-        while (true) {
+        do  {
             StdDraw.filledSquare(0.0, 0.0, 3.0);
 
             StdDraw.picture(0,0, "images/starfield.jpg");
@@ -86,6 +91,35 @@ public class NBody {
             StdDraw.picture(px[3],  py[3], "images/" + image[3]);
             StdDraw.picture(px[4],  py[4], "images/" + image[4]);
             StdDraw.show(20);
+
+
+
+            // Pairwise force, dx, dy and acceleration between sun and venus
+            double[] forceOfSunAndVenus = pairWiseForce(px[4], py[4], vx[4], vy[4], m[4], px[3], py[3], vx[3], vy[3], m[3]);    // Return x-force and y-force
+            vx[4] = vx[4] + dt * forceOfSunAndVenus[0] / m[4];
+            vy[4] = vy[4] + dt * forceOfSunAndVenus[1] / m[4];
+
+            // Pairwise force between sun and mercury
+            double[] foreOfSunAndMercury = pairWiseForce(px[2], py[2], vx[2], vy[2], m[2], px[3], py[3], vx[3], vy[3], m[3]);
+            vx[2] = vx[2] + dt * foreOfSunAndMercury[0] / m[2];
+            vy[2] = vy[2] + dt * foreOfSunAndMercury[1] / m[2];
+
+
+
+            // Pairwise force for sun and earth
+            double[] forceOfSunAndEarth = pairWiseForce(px[0], py[0], vx[0], vy[0], m[0], px[3], py[3], vx[3], vy[3], m[3]);
+            vx[0] = vx[0] + dt * forceOfSunAndEarth[0] / m[0];
+            vy[0] = vy[0] + dt * forceOfSunAndEarth[1] / m[0];
+
+
+            // Pairwise force between sun and mar
+            double[] foreOfSunAndMar = pairWiseForce(px[1], py[1], vx[1], vy[1], m[1], px[3], py[3], vx[3], vy[3], m[3]);
+            vx[1] = vx[1] + dt * foreOfSunAndMar[0] / m[1];
+            vy[1] = vy[1] + dt * foreOfSunAndMar[1] / m[1];
+
+
+
+
 
             // New position for earth
             px[0] = px[0] + dt * vx[0];
@@ -104,38 +138,9 @@ public class NBody {
             px[4] = px[4] + dt * vx[4];
             py[4] = py[4] + dt * vy[4];
 
+            deltaT = deltaT + dt;
+        } while (deltaT < t);
 
-            // Pairwise force, dx, dy and acceleration between sun and venus
-            double[] forceOfSunAndVenus = pairWiseForce(px[4], py[4], vx[4], vy[4], m[4], px[3], py[3], vx[3], vy[3], m[3]);    // Return x-force and y-force
-//            double aXOfVenus = forceOfSunAndVenus[0] / m[4]; // acceleration of Venus in x-axis
-//            double aYOfVenus = forceOfSunAndVenus[1] / m[4]; // acceleration of Venus in y-axis
-            vx[4] = vx[4] + dt * forceOfSunAndVenus[0] / m[4];
-            vy[4] = vy[4] + dt * forceOfSunAndVenus[1] / m[4];
-
-            // Pairwise force between sun and mercury
-            double[] foreOfSunAndMercury = pairWiseForce(px[2], py[2], vx[2], vy[2], m[2], px[3], py[3], vx[3], vy[3], m[3]);
-//            double aXOfMercury = forceOfSunAndVenus[0] / m[2]; // acceleration of Mercury in x-axis
-//            double aYOfMercury = forceOfSunAndVenus[1] / m[2]; // acceleration of Mercury in y-axis
-            vx[2] = vx[2] + dt * foreOfSunAndMercury[0] / m[2];
-            vy[2] = vy[2] + dt * foreOfSunAndMercury[1] / m[2];
-
-
-
-            // Pairwise force for sun and earth
-            double[] forceOfSunAndEarth = pairWiseForce(px[0], py[0], vx[0], vy[0], m[0], px[3], py[3], vx[3], vy[3], m[3]);
-//            double aXOfEarth = forceOfSunAndEarth[0] / m[0]; // acceleration of Earth in x-axis
-//            double aYOfEarth = forceOfSunAndEarth[1] / m[0]; // acceleration of Earth in y-axis
-            vx[0] = vx[0] + dt * forceOfSunAndEarth[0] / m[0];
-            vy[0] = vy[0] + dt * forceOfSunAndEarth[1] / m[0];
-
-
-            // Pairwise force between sun and mar
-            double[] foreOfSunAndMar = pairWiseForce(px[1], py[1], vx[1], vy[1], m[1], px[3], py[3], vx[3], vy[3], m[3]);
-//            double aXOfMar = foreOfSunAndMar[0] / m[1]; // acceleration of Mar in x-axis
-//            double aYOfMar = foreOfSunAndMar[1] / m[1]; // acceleration of Mar in y-axis
-            vx[1] = vx[1] + dt * foreOfSunAndMar[0] / m[1];
-            vy[1] = vy[1] + dt * foreOfSunAndMar[1] / m[1];
-        }
     }
 
     private static double[] pairWiseForce(double posXPlanet1, double posYPlanet1, double velXPlanet1, double velYPlanet1, double m1,
