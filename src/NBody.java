@@ -1,4 +1,4 @@
-import sun.nio.cs.ext.MacThai;
+
 
 import java.util.InputMismatchException;
 
@@ -20,6 +20,7 @@ public class NBody {
     private static double G = 6.67e-11;
 
     public static void main(String[] args) {
+
         In inStream = new In("text/planets.txt");
         boolean b = inStream.isEmpty();
         int n = inStream.readInt();
@@ -28,7 +29,7 @@ public class NBody {
         R = inStream.readDouble();
 
 
-
+        // Populate px[], py[], vx[], vy[], m[], image[] array from planets.txt file
         while (!b) {
 
 
@@ -80,9 +81,7 @@ public class NBody {
             StdDraw.filledSquare(0.0, 0.0, 3.0);
 
 
-
-
-
+            // Draw planet
             StdDraw.picture(0,0, "images/starfield.jpg");
             StdDraw.picture(px[0],  py[0], "images/" + image[0]);
             StdDraw.picture(px[1],  py[1], "images/" + image[1]);
@@ -101,7 +100,7 @@ public class NBody {
             double[] forceOfMercuryAndVenus = pairWiseForce(px[4], py[4], m[4], px[2], py[2], m[2]);
             double[] forceOfEarthAndVenus = pairWiseForce(px[4], py[4], m[4],px[0], py[0], m[0]);
             double[] forceOfMarAndVenus = pairWiseForce(px[4], py[4], m[4], px[1], py[1], m[1]);
-            vx[4] = vx[4] + dt * (forceOfSunAndVenus[0] + forceOfMercuryAndVenus[0] + forceOfEarthAndVenus[0] + forceOfMarAndVenus[0]) / m[4];
+            vx[4] = vx[4] + dt * (forceOfSunAndVenus[0] + forceOfMercuryAndVenus[0] + forceOfEarthAndVenus[0] + forceOfMarAndVenus[0]) / m[4];  // Update velocity
             vy[4] = vy[4] + dt * (forceOfSunAndVenus[1] + forceOfMercuryAndVenus[1] + forceOfEarthAndVenus[1] + forceOfMarAndVenus[1]) / m[4];
 
 
@@ -109,44 +108,44 @@ public class NBody {
 
 
             // Pairwise force between sun and mercury, venus and mercury, earth and mercury, mar and mercury
-            double[] foreOfSunAndMercury = pairWiseForce(px[2], py[2], m[2], px[3], py[3], m[3]);
+            double[] foreOfSunAndMercury = pairWiseForce(px[2], py[2], m[2], px[3], py[3], m[3]);       // Return x-force and y-force
             double[] forceOfVenusAndMercury = pairWiseForce(px[2], py[2], m[2], px[4], py[4], m[4]);
             double[] forceOfEarthAndMercury = pairWiseForce(px[2], py[2], m[2], px[0], py[0], m[0]);
             double[] forceOfMarAndMercury = pairWiseForce(px[2], py[2], m[2], px[1], py[1], m[1]);
 
-            vx[2] = vx[2] + dt * (foreOfSunAndMercury[0] + forceOfVenusAndMercury[0] + forceOfEarthAndMercury[0] + forceOfMarAndMercury[0]) / m[2];
+            vx[2] = vx[2] + dt * (foreOfSunAndMercury[0] + forceOfVenusAndMercury[0] + forceOfEarthAndMercury[0] + forceOfMarAndMercury[0]) / m[2]; // Update velocity
             vy[2] = vy[2] + dt * (foreOfSunAndMercury[1] + forceOfVenusAndMercury[1] + forceOfEarthAndMercury[1] + forceOfMarAndMercury[1]) / m[2];
 
 
 
 
             // Pairwise force for sun and earth, venus and earth, mercury and earth, mar and earth
-            double[] forceOfSunAndEarth = pairWiseForce(px[0], py[0], m[0], px[3], py[3], m[3]);
+            double[] forceOfSunAndEarth = pairWiseForce(px[0], py[0], m[0], px[3], py[3], m[3]);        // Return x-force and y-force
             double[] forceOfVenusAndEarth = pairWiseForce(px[0], py[0], m[0], px[4], py[4], m[4]);
             double[] forceOfMercuryAndEarth = pairWiseForce(px[0], py[0], m[0], px[2], py[2], m[2]);
             double[] forceOfMarAndEarth = pairWiseForce(px[0], py[0], m[0], px[1], py[1], m[1]);
-            vx[0] = vx[0] + dt * (forceOfSunAndEarth[0] + forceOfVenusAndEarth[0] + forceOfMercuryAndEarth[0] + forceOfMarAndEarth[0])  / m[0];
+            vx[0] = vx[0] + dt * (forceOfSunAndEarth[0] + forceOfVenusAndEarth[0] + forceOfMercuryAndEarth[0] + forceOfMarAndEarth[0])  / m[0]; // Update velocity
             vy[0] = vy[0] + dt * (forceOfSunAndEarth[1] + forceOfVenusAndEarth[1] + forceOfMercuryAndEarth[1] + forceOfMarAndEarth[1]) / m[0];
 
 
 
 
             // Pairwise force between sun and mar, venus and mar, mercury and mar, earth and mar
-            double[] foreOfSunAndMar = pairWiseForce(px[1], py[1], m[1], px[3], py[3], m[3]);
+            double[] foreOfSunAndMar = pairWiseForce(px[1], py[1], m[1], px[3], py[3], m[3]);           // Return x-force and y-force
             double[] forceOfVenusAndMar = pairWiseForce(px[1], py[1],  m[1], px[4], py[4], m[4]);
             double[] forceOfMercuryAndMar = pairWiseForce(px[1], py[1], m[1], px[2], py[2], m[2]);
             double[] forceOfEarthAndMars = pairWiseForce(px[1], py[1], m[1], px[0], py[0], m[0]);
-            vx[1] = vx[1] + dt * (foreOfSunAndMar[0] + forceOfVenusAndMar[0] + forceOfMercuryAndMar[0] + forceOfEarthAndMars[0]) / m[1];
+            vx[1] = vx[1] + dt * (foreOfSunAndMar[0] + forceOfVenusAndMar[0] + forceOfMercuryAndMar[0] + forceOfEarthAndMars[0]) / m[1];    // Update velocity
             vy[1] = vy[1] + dt * (foreOfSunAndMar[1] + forceOfVenusAndMar[1] + forceOfMercuryAndMar[1] + forceOfEarthAndMars[1]) / m[1];
 
 
 
             // Pairwise force between venus and sun, mercury and sun, earth and sun, mar and sun
-            double[] forceOfVenusAndSun = pairWiseForce(px[3], py[3], m[3], px[4], py[4], m[4]);
+            double[] forceOfVenusAndSun = pairWiseForce(px[3], py[3], m[3], px[4], py[4], m[4]);        // Return x-force and y-force
             double[] forceOfMercuryAndSun = pairWiseForce(px[2], py[2], m[2], px[4], py[4], m[4]);
             double[] forceOfEarthAndSun = pairWiseForce(px[0], py[0], m[0], px[4], py[4], m[4]);
             double[] forceOfMarAndSun = pairWiseForce(px[1], py[1], m[1], px[4], py[4], m[4]);
-            vx[3] = vx[3] + dt * (forceOfVenusAndSun[0] + forceOfMercuryAndSun[0] + forceOfEarthAndSun[0] + forceOfMarAndSun[0]) / m[3];
+            vx[3] = vx[3] + dt * (forceOfVenusAndSun[0] + forceOfMercuryAndSun[0] + forceOfEarthAndSun[0] + forceOfMarAndSun[0]) / m[3];    // Update velocity
             vy[3] = vy[3] + dt * (forceOfVenusAndSun[1] + forceOfMercuryAndSun[1] + forceOfEarthAndSun[1] + forceOfMarAndSun[1]) / m[3];
 
 
@@ -172,21 +171,23 @@ public class NBody {
             py[3] = py[3] + dt * vy[3];
 
 
-            deltaT = deltaT + dt;
+            deltaT = deltaT + dt;   // Update time deltaT
 
 
 
 
-        } while (deltaT <= t);
+        } while (deltaT <= t);      // Restrict planet movement within certain time
 
     }
 
+
+    // Calculate force between two planet
     private static double[] pairWiseForce(double posXPlanet1, double posYPlanet1, double m1,
                                      double posXPlanet2, double posYPlanet2, double m2) {
 
-      
+
         double d = Math.sqrt(Math.pow(posXPlanet2 - posXPlanet1, 2) + Math.pow(posYPlanet2 - posYPlanet1, 2));  // Distance between 2 planets
-        double force = G * m1 * m2 / Math.pow(d, 2);
+        double force = G * m1 * m2 / Math.pow(d, 2);    // Gravitational force
 
         return new double[]{force * (posXPlanet2 - posXPlanet1) / d, force * (posYPlanet2 - posYPlanet1) / d};  // Return x- and y- Force Component
     }
